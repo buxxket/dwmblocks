@@ -1,0 +1,33 @@
+#!/bin/bash
+SOURCE="alsa_input.pci-0000_0d_00.4.analog-stereo"
+SOURCE_ID="$(wpctl status | grep "Starship/Matisse HD Audio Controller Analog Stereo" | grep -oP '\d+(?=\.)' | head -1)"
+VOLUME=$(pactl get-source-volume "$SOURCE" | awk '{print $5}' | tr -d '%')
+VOLUME="${VOLUME#Volume: }"
+MUTED=$(pactl get-source-mute "$SOURCE" | awk '{print $2}')
+
+if [ -n "$BLOCK_BUTTON" ]; then
+	case $BLOCK_BUTTON in
+		1) pactl set-sink-mute alsa_output.pci-0000_0d_00.4.analog-stereo toggle ;;
+		2) notify-send "M1 to mute
+		SCROLL to change volume" ;;
+		3) notify-send "M1 to mute
+		SCROLL to change volume" ;;
+		4) wpctl set-volume $SOURCE_ID 1%+ ;;
+		5) wpctl set-volume $SOURCE_ID 1%- ;;
+	esac
+	exit 0
+fi
+
+if (( VOLUME > 15 )); then
+    pactl set-source-mute "$SOURCE" 1
+    echo " !!! [muted] M30 ($((VOLUME * 10))%) "
+    exit 0
+fi
+
+if [[ $(cat /tmp/sb_m30_music_status) == "1" ]]; then
+    if [[ "$MUTED" == "yes" ]]; then
+        echo " [muted] M30 ($((VOLUME * 10))%) "
+    else
+        echo " M30 ($((VOLUME * 10))%) "
+    fi
+fi

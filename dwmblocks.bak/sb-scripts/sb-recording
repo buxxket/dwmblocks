@@ -1,0 +1,35 @@
+#!/bin/bash
+
+ICON_FILE="/tmp/recordingicon"
+INTERVAL=2
+
+# List of process names or patterns associated with screen sharing
+PROCESS_LIST=(
+    "teams"
+    "zoom"
+    "chrome"
+    "chromium"
+    "ffmpeg.*x11grab"   # ffmpeg screen capture
+    "obs"
+    "vnc"
+    "gstreamer"
+)
+
+while true; do
+    found=0
+    for p in "${PROCESS_LIST[@]}"; do
+        # Use pgrep -f for pattern matches (case insensitive)
+        if pgrep -fi "$p" >/dev/null; then
+            found=1
+            break
+        fi
+    done
+
+    if [ $found -eq 1 ]; then
+        echo "🔴" > "$ICON_FILE"
+    else
+        echo "" > "$ICON_FILE"  # clear file
+    fi
+	
+    sleep $INTERVAL
+done

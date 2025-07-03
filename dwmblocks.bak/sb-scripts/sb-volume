@@ -1,0 +1,33 @@
+#!/bin/sh
+
+case $BLOCK_BUTTON in
+	1) wpctl set-mute @DEFAULT_SINK@ toggle ;; # 156 is speaker
+	3) pwvucontrol ;;
+	4) wpctl set-volume @DEFAULT_SINK@ 10%+ ;;
+	5) wpctl set-volume @DEFAULT_SINK@ 10%- ;;
+esac
+
+vol="$(wpctl get-volume @DEFAULT_SINK@)" # get vol of speaker
+
+[ "$vol" != "${vol%\[MUTED\]}" ] && echo " 󰝟 " && exit
+
+vol="${vol#Volume: }"
+
+split() {
+	# For ommiting the . without calling and external program.
+	IFS=$2
+	set -- $1
+	printf '%s' "$@"
+}
+
+vol="$(printf "%.0f" "$(split "$vol" ".")")"
+
+case 1 in
+	$((vol >= 70)) ) icon=" 󰕾 " ;;
+	$((vol >= 30)) ) icon=" 󰖀 " ;;
+	$((vol >= 1)) ) icon=" 󰕿 " ;;
+	* ) echo " 󰝟 " && exit ;;
+esac
+
+# echo "$icon$vol%"
+echo "$icon" # no volume readout, just icon

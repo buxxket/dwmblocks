@@ -1,0 +1,9 @@
+#!/bin/sh
+
+case $BLOCK_BUTTON in
+	# 1) wpctl set-mute @DEFAULT_SOURCE@ toggle ;; # 156 is speaker
+	# 3) pwvucontrol ;;
+esac
+
+[ "$(timeout 1 fuser /dev/video* 2>/dev/null)" != '' ] && echo " 󰕧 " || echo ""
+

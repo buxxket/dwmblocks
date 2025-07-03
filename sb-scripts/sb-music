@@ -1,0 +1,46 @@
+#!/bin/sh
+
+MUSIC_PLAYERS="vlc spotify"
+META="{{ artist }} - {{ title }}"
+
+if [ -n "$BLOCK_BUTTON" ]; then
+    case $BLOCK_BUTTON in
+    	1) for PLAYER in $MUSIC_PLAYERS; do
+ 	       	[ "$(playerctl --player=$PLAYER status 2>/dev/null)" = "No players found" ] && continue
+    	    playerctl play-pause --player $PLAYER
+    	done ;;
+    	2) for PLAYER in $MUSIC_PLAYERS; do
+ 	       	[ "$(playerctl --player=$PLAYER status 2>/dev/null)" = "No players found" ] && continue
+    	    playerctl previous --player $PLAYER
+    	done ;;
+    	3) for PLAYER in $MUSIC_PLAYERS; do
+ 	       	[ "$(playerctl --player=$PLAYER status 2>/dev/null)" = "No players found" ] && continue
+    	    playerctl next --player $PLAYER
+    	done ;;
+        4) for PLAYER in $MUSIC_PLAYERS; do
+        	[ "$(playerctl --player=$PLAYER status 2>/dev/null)" = "No players found" ] && continue
+            playerctl --player=$PLAYER volume $(echo "$(playerctl --player=$PLAYER volume) + 0.05" | bc)
+		done ;;
+        
+        5) for PLAYER in $MUSIC_PLAYERS; do
+            [ "$(playerctl --player=$PLAYER status 2>/dev/null)" = "No players found" ] && continue
+           	playerctl --player=$PLAYER volume $(echo "$(playerctl --player=$PLAYER volume) - 0.05" | bc)
+    	done ;;
+    esac
+fi
+
+if [[ $(cat /tmp/sb_m30_music_status) == "0" ]] ; then
+	for PLAYER in $MUSIC_PLAYERS; do
+		STATUS="$(timeout 1 playerctl --player $PLAYER status 2>/dev/null)"
+		[ "$(playerctl --player=$PLAYER status 2>/dev/null)" = "No players found" ] && continue
+		if [ "$STATUS" = "Playing" ]; then
+		    SONG="$(timeout 1 playerctl metadata --player $PLAYER --format "$META" 2>/dev/null)"
+		    [ -n "$SONG" ] && echo " $SONG ["$PLAYER"] "
+		elif [ "$STATUS" = "Paused" ]; then
+		    SONG="$(timeout 1 playerctl metadata --player $PLAYER --format "$META" 2>/dev/null)"
+		    [ -n "$SONG" ] && echo " [paused] $SONG [$PLAYER] "
+		else
+	    echo ""
+		fi
+	done
+fi

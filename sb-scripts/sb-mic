@@ -1,0 +1,14 @@
+#!/bin/sh
+
+case $BLOCK_BUTTON in
+	1) wpctl set-mute @DEFAULT_SOURCE@ toggle ;; # 156 is speaker
+	3) pwvucontrol ;;
+esac
+
+vol="$(timeout 1 wpctl get-volume @DEFAULT_SOURCE@)" # get vol of mic
+
+if [ "$(wpctl status | grep "< Scarlett Solo USB")" != '' ] ; then
+	[ "$vol" != "${vol%\[MUTED\]}" ] && echo " 󰍭 " || echo " 󰍬 "
+else
+	echo ""
+fi 

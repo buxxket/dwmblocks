@@ -1,0 +1,30 @@
+#!/bin/sh
+
+case $BLOCK_BUTTON in
+	1) if ! bluetoothctl show | grep -q "Powered: yes"; then
+	    bluetoothctl power on; else
+	    bluetoothctl power off;
+	fi ;;
+	2) kitty --class floatkitty bluetui ;;
+	3) notify-send "M1 to toggle bluetooth
+M3 to open tui" ;;
+esac
+
+
+ICON_OFF=""     # Bluetooth powered off
+# ICON_OFF=" 󰂲 "     # Bluetooth powered off
+ICON_DISC="  "    # Bluetooth powered, no devices connected
+ICON_CONN=" 󰂱 "    # Bluetooth connected (FontAwesome/Nerd Font icons)
+
+# Check if Bluetooth is powered on
+if ! bluetoothctl show | grep -q "Powered: yes"; then
+    echo "$ICON_OFF"
+    exit 0
+fi
+
+# Check if any device is connected
+if bluetoothctl info | grep -q "Connected: yes"; then
+    echo "$ICON_CONN"
+else
+    echo "$ICON_DISC"
+fi

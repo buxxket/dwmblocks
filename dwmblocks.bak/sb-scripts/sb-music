@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Handle clicks first and exit immediately
+if [ -n "$BLOCK_BUTTON" ]; then
+    case $BLOCK_BUTTON in
+        1) playerctl play-pause ;;
+        2) playerctl previous ;;
+        3) playerctl next ;;
+        4) sb-spotifyvol up ;;
+        5) sb-spotifyvol down ;;
+    esac
+    exit 0
+fi
+
+# Otherwise, output status
+META="{{ artist }} - {{ title }}"
+STATUS="$(timeout 1 playerctl --player=spotify status 2>/dev/null)"
+if [ "$STATUS" = "Playing" ]; then
+    SONG="$(timeout 1 playerctl metadata --player=spotify --format "$META" 2>/dev/null)"
+    [ -n "$SONG" ] && echo "| $SONG " || echo ""
+elif [ "$STATUS" = "Paused" ]; then
+    SONG="$(timeout 1 playerctl metadata --player=spotify --format "$META" 2>/dev/null)"
+    [ -n "$SONG" ] && echo "| [paused] $SONG " || echo ""
+else
+    echo ""
+fi

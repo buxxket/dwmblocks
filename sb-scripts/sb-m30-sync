@@ -1,0 +1,13 @@
+#!/bin/bash
+
+case $BLOCK_BUTTON in
+	1) kitty --class floatkitty tail -f /tmp/m30-sync-music.log ;;
+	# 2) [ -n "$(cat /sys/class/net/wg0/operstate 2>/dev/null)" ] && sudo wg-quick down wg0 || sudo wg-quick up wg0 ;;
+	# 3) notify-send "M1 to open nmtui
+# M3 to restart wg" ;;
+esac
+
+STATUS_FILE="/tmp/sd_sync_status"
+if [ -s "$STATUS_FILE" ]; then
+     echo "$(cat $STATUS_FILE) "
+fi
