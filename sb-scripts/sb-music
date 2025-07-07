@@ -39,8 +39,8 @@ if [[ $(cat /tmp/sb_m30_music_status) == "0" ]] ; then
 		elif [ "$STATUS" = "Paused" ]; then
 		    SONG="$(timeout 1 playerctl metadata --player $PLAYER --format "$META" 2>/dev/null)"
 		    [ -n "$SONG" ] && echo " [paused] $SONG [$PLAYER] "
-		else
-	    echo ""
+		# else
+	 #    echo ""
 		fi
 	done
 fi
