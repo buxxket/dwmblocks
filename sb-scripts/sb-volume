@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SPEAKER_ID="$(wpctl status | grep speaker | grep -oP '\d+(?=\.)' | head -1)"
+SPEAKER_ID="@DEFAULT_SINK@"
 
 case $BLOCK_BUTTON in
 	1) wpctl set-mute $SPEAKER_ID toggle ;;

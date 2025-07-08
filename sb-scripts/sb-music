@@ -29,18 +29,15 @@ if [ -n "$BLOCK_BUTTON" ]; then
     esac
 fi
 
-if [[ $(cat /tmp/sb_m30_music_status) == "0" ]] ; then
-	for PLAYER in $MUSIC_PLAYERS; do
-		STATUS="$(timeout 1 playerctl --player $PLAYER status 2>/dev/null)"
-		[ "$(playerctl --player=$PLAYER status 2>/dev/null)" = "No players found" ] && continue
-		if [ "$STATUS" = "Playing" ]; then
-		    SONG="$(timeout 1 playerctl metadata --player $PLAYER --format "$META" 2>/dev/null)"
-		    [ -n "$SONG" ] && echo " $SONG ["$PLAYER"] "
-		elif [ "$STATUS" = "Paused" ]; then
-		    SONG="$(timeout 1 playerctl metadata --player $PLAYER --format "$META" 2>/dev/null)"
-		    [ -n "$SONG" ] && echo " [paused] $SONG [$PLAYER] "
-		else
-	    echo ""
-		fi
-	done
-fi
+
+for PLAYER in $MUSIC_PLAYERS; do
+	STATUS="$(timeout 1 playerctl --player $PLAYER status 2>/dev/null)"
+	[ "$(playerctl --player=$PLAYER status 2>/dev/null)" = "No players found" ] && continue
+	if [ "$STATUS" = "Playing" ]; then
+	    SONG="$(timeout 1 playerctl metadata --player $PLAYER --format "$META" 2>/dev/null)"
+	    [ -n "$SONG" ] && echo " $SONG ["$PLAYER"] "
+	elif [ "$STATUS" = "Paused" ]; then
+	    SONG="$(timeout 1 playerctl metadata --player $PLAYER --format "$META" 2>/dev/null)"
+	    [ -n "$SONG" ] && echo " [paused] $SONG [$PLAYER] "
+	fi
+done
