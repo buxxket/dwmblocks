@@ -20,14 +20,15 @@ fi
 
 if (( VOLUME > 15 )); then
     pactl set-source-mute "$SOURCE" 1
-    echo " !!! [muted] M30 ($((VOLUME * 10))%) "
+    echo " !!! [muted] Playing from M30 ($((VOLUME * 10))%) "
     exit 0
 fi
 
 if [[ $(cat /tmp/sb_m30_music_status) == "1" ]]; then
     if [[ "$MUTED" == "yes" ]]; then
-        echo " [muted] M30 ($((VOLUME * 10))%) "
+        echo " [muted] Playing from M30 ($((VOLUME * 10))%) "
     else
-        echo " M30 ($((VOLUME * 10))%) "
+		playerctl pause
+        echo " Playing from M30 ($((VOLUME * 10))%) "
     fi
 fi

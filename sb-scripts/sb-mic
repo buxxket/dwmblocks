@@ -1,14 +1,52 @@
 #!/bin/sh
 
+PIDFILE="$HOME/.mic-tone-keepalive.pid"
+PLAY_CMD="play -nq synth sin 1"
+MIC_NAME="Scarlett Solo USB"
+
+# Process click events
 case $BLOCK_BUTTON in
-	1) wpctl set-mute @DEFAULT_SOURCE@ toggle ;; # 156 is speaker
-	3) pwvucontrol ;;
+    1) wpctl set-mute @DEFAULT_SOURCE@ toggle ;; # Toggle mic mute
+    3) pwvucontrol ;;
 esac
 
-vol="$(timeout 1 wpctl get-volume @DEFAULT_SOURCE@)" # get vol of mic
+# Helper: check if tone is running
+is_tone_running() {
+    [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null
+}
 
-if [ "$(wpctl status | grep "< Scarlett Solo USB")" != '' ] ; then
-	[ "$vol" != "${vol%\[MUTED\]}" ] && echo " 󰍭 " || echo " 󰍬 "
+# Helper: start the tone
+start_tone() {
+    if ! is_tone_running; then
+        $PLAY_CMD >/dev/null 2>&1 &
+        echo $! > "$PIDFILE"
+    fi
+}
+
+# Helper: stop the tone
+stop_tone() {
+    if is_tone_running; then
+        kill "$(cat "$PIDFILE")" 2>/dev/null
+        rm -f "$PIDFILE"
+    fi
+}
+
+# Get mic volume/mute status
+vol="$(timeout 1 wpctl get-volume @DEFAULT_SOURCE@ 2>/dev/null)"
+
+# Check if Scarlett Solo USB is present in wpctl status
+if wpctl status | grep -q "< $MIC_NAME"; then
+    if [ "$vol" != "${vol%\[MUTED\]}" ]; then
+        # Mic is muted, stop tone
+        stop_tone
+        echo " 󰍭 "
+    else
+        # Mic is unmuted, start tone
+        start_tone
+        echo " 󰍬 "
+    fi
 else
-	echo ""
-fi 
+    # Mic not present, stop tone
+    stop_tone
+    echo ""
+fi

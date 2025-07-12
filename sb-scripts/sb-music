@@ -31,14 +31,19 @@ fi
 
 if [[ $(cat /tmp/sb_m30_music_status) == "0" ]] ; then
 	for PLAYER in $MUSIC_PLAYERS; do
+		if [ "$PLAYER" = "vlc" ]; then
+			PLAYERICON="󰕼"
+		elif [ "$PLAYER" = "spotify" ]; then
+			PLAYERICON=""
+		fi
 		STATUS="$(timeout 1 playerctl --player $PLAYER status 2>/dev/null)"
 		[ "$(playerctl --player=$PLAYER status 2>/dev/null)" = "No players found" ] && continue
 		if [ "$STATUS" = "Playing" ]; then
 		    SONG="$(timeout 1 playerctl metadata --player $PLAYER --format "$META" 2>/dev/null)"
-		    [ -n "$SONG" ] && echo " $SONG ["$PLAYER"] "
+		    [ -n "$SONG" ] && echo " $PLAYERICON  $SONG "
 		elif [ "$STATUS" = "Paused" ]; then
 		    SONG="$(timeout 1 playerctl metadata --player $PLAYER --format "$META" 2>/dev/null)"
-		    [ -n "$SONG" ] && echo " [paused] $SONG [$PLAYER] "
+		    [ -n "$SONG" ] && echo " [paused] $PLAYERICON  $SONG "
 		# else
 	 #    echo ""
 		fi
