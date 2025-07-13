@@ -21,11 +21,11 @@ if [ -n "$BLOCK_BUTTON" ]; then
         	[ "$(playerctl --player=$PLAYER status 2>/dev/null)" = "No players found" ] && continue
             playerctl --player=$PLAYER volume $(echo "$(playerctl --player=$PLAYER volume) + 0.05" | bc)
 		done ;;
-        
         5) for PLAYER in $MUSIC_PLAYERS; do
             [ "$(playerctl --player=$PLAYER status 2>/dev/null)" = "No players found" ] && continue
            	playerctl --player=$PLAYER volume $(echo "$(playerctl --player=$PLAYER volume) - 0.05" | bc)
     	done ;;
+    	6) kitty --class floatkitty micro ~/suckless/dwmblocks/sb-scripts/sb-music ;;
     esac
 fi
 
@@ -44,8 +44,6 @@ if [[ $(cat /tmp/sb_m30_music_status) == "0" ]] ; then
 		elif [ "$STATUS" = "Paused" ]; then
 		    SONG="$(timeout 1 playerctl metadata --player $PLAYER --format "$META" 2>/dev/null)"
 		    [ -n "$SONG" ] && echo " [paused] $PLAYERICON  $SONG "
-		# else
-	 #    echo ""
 		fi
 	done
 fi
