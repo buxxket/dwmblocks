@@ -1,9 +1,0 @@
-#!/bin/sh
-
-case $BLOCK_BUTTON in
-	1) notify-send "This Month" "$(cal | sed "s/\<$(date +'%e'|tr -d ' ')\>/<b><span color='red'>&<\/span><\/b>/")" ;; #&& notify-send "Appointments" "$(calcurse -d3)" ;;
-   	6) kitty --class floatkitty micro ~/suckless/dwmblocks/sb-scripts/sb-clock ;;
-esac
-
-
-date "+ %H:%M:%S | %Y %b %d - %a "
