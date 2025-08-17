@@ -1,18 +1,17 @@
-//Modify this file to change what commands output to your statusbar, and recompile using the make command.
-static const Block blocks[] = {
-	/*Icon*/	/*Command*/		/*Update Interval*/	/*Update Signal*/
-	{"",	"sb-todo",			1,					9},
-	{"",	"sb-m30-sync",		1,					2},
-	{"",	"sb-video",			1,					7},
-	{"",	"sb-mic",			1,					6},
-	{"",	"sb-m30-playing",	1,					12},
-	{"",	"sb-music",			1,					11},
-	{"",	"sb-clock",			1,					1},
-	{"",	"sb-volume",		1,					10},
-	{"",	"sb-battery",		5,					3},
-	{"",	"sb-bluetooth",		5,					5},
-	{"",	"sb-internet",		5,					4},
-};
+#define CMDLENGTH 100
+#define DELIMITER " "
+#define CLICKABLE_BLOCKS
+#define LEADING_DELIMITER
 
-//Sets delimiter between status commands. NULL character ('\0') means no delimiter.
-static char *delim = "|";
+const Block blocks[] = {
+	BLOCK("sb-todo",		1,  1),
+	BLOCK("sb-m30-sync",	2,  2),
+	BLOCK("sb-video",		5,  3),
+	BLOCK("sb-mic",			5,  4),
+	BLOCK("sb-music",		0,  5),
+	BLOCK("sb-clock",		1,  6),
+	BLOCK("sb-volume",		0,  7),
+	BLOCK("sb-bluetooth",	5,	8),
+	BLOCK("sb-battery",		60,	9),
+	BLOCK("sb-internet",    5,	10),
+};
