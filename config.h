@@ -10,7 +10,7 @@ const Block blocks[] = {
 	BLOCK("sb-mic",			5,  4),
 	BLOCK("sb-music",		0,  5),
 	BLOCK("sb-clock",		1,  6),
-	BLOCK("sb-volume",		0,  7),
+	BLOCK("sb-volume",		5,  7),
 	BLOCK("sb-bluetooth",	5,	8),
 	BLOCK("sb-battery",		60,	9),
 	BLOCK("sb-internet",    5,	10),
