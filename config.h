@@ -4,9 +4,10 @@
 #define LEADING_DELIMITER
 
 const Block blocks[] = {
-	BLOCK("sb-device-status",		5,  3),
-	BLOCK("sb-todo",				1,  1),
-	BLOCK("sb-m30-sync",			2,  2),
+	BLOCK("sb-ha-phone-battery",	10, 1),
+	BLOCK("sb-device-status",		5,  2),
+	BLOCK("sb-todo",				1,  3),
+	BLOCK("sb-m30-sync",			2,  4),
 	BLOCK("sb-music",				1,  5),
 	BLOCK("sb-clock",				1,  6),
 	BLOCK("sb-volume",				5,  7),
